@@ -700,6 +700,7 @@ layout: section
 |---|---|---|
 | `.cursorrules` | Cursor | Загальні правила для всього проекту |
 | `.cursor/rules/*.md` | Cursor | Правила для конкретних файлів/паттернів |
+| `.cursor/skills/*.md` | Cursor | Комплексні інструкції для складних сценаріїв |
 | `AGENTS.md` | GitHub Copilot, Codex | Інструкції для агента (аналог .cursorrules) |
 | `CLAUDE.md` | Claude Code | Інструкції для Claude в терміналі |
 | `llms.txt` | Будь-який AI | Публічний опис проекту для AI (як robots.txt) |
@@ -929,6 +930,25 @@ layout: section
 | **v0.dev** | $20 | UI generation (React + Tailwind) |
 | **Devin** | ~$500 | Автономний AI-інженер |
 
+</div>
+
+---
+layout: center
+---
+
+# Реальність цін AI-інструментів
+
+<div class="mt-8 p-6 bg-white bg-opacity-5 rounded-xl max-w-2xl mx-auto border border-gray-500 border-opacity-20">
+  <div class="flex items-center gap-2 text-sm opacity-50 mb-3">
+    <span class="font-bold">@ryanvogel</span> · 2026
+  </div>
+  <div class="text-lg mb-4">Детальне порівняння вартості AI-інструментів для розробки</div>
+  <div class="text-sm opacity-70">Візуалізація показує, скільки насправді коштують підписки і API токени при реальному використанні</div>
+  <a href="https://x.com/ryanvogel/status/1964819755644412087" class="text-sm text-blue-400 mt-4 block hover:underline">→ Переглянути повний аналіз та скріншоти</a>
+</div>
+
+<div class="mt-6 text-center text-xs opacity-50">
+Порівняння включає Cursor, Copilot, Claude, API-витрати та реальні кейси використання
 </div>
 
 ---
@@ -1417,16 +1437,43 @@ class: text-center
 
 # Дякую! Питання?
 
-<div class="mt-8">
-
-<div class="text-xl opacity-70 mb-8">
+<div class="mt-6 text-xl opacity-70 mb-6">
 AI не замінює розробників.<br/>
 Розробники з AI замінюють розробників без AI.
 </div>
 
+<div class="grid grid-cols-2 gap-12 mt-8 max-w-3xl mx-auto">
+
+<div>
+
+### 📧 Контакти
+
+<div class="text-left text-sm opacity-70 mt-4">
+
+- **Slides:** github.com/your-repo
+- **LinkedIn:** linkedin.com/in/vadym
+- **Email:** vadym@company.com
+
 </div>
 
-<div class="mt-4 text-sm opacity-40">
-  Вадим | Лютий 2026
+</div>
+
+<div class="flex flex-col items-center justify-center">
+
+<div class="w-48 h-48 bg-white rounded-lg flex items-center justify-center text-center p-4">
+  <div>
+    <div class="text-sm font-bold text-gray-800 mb-2">QR Code</div>
+    <div class="text-xs text-gray-600">Презентація доступна за посиланням</div>
+  </div>
+</div>
+
+<div class="text-xs opacity-60 mt-3">github.com/your-repo</div>
+
+</div>
+
+</div>
+
+<div class="mt-6 text-sm opacity-40">
+  Вадим — Tech Lead | Лютий 2026
 </div>
 
