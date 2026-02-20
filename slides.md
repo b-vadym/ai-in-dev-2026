@@ -1540,6 +1540,163 @@ AI — це не тільки для розробників. QA отримує �
 </div>
 
 ---
+layout: section
+---
+
+# AI Code Review у CI/CD
+
+Автоматичне рев'ю Merge Request через Claude Code
+
+---
+
+# Навіщо AI-рев'ю в CI?
+
+<div class="grid grid-cols-2 gap-8 mt-6">
+
+<div>
+
+### Проблема
+
+<v-clicks>
+
+- Людське рев'ю — вузьке місце: черга MR, день очікування
+- Рев'юер втомлюється і пропускає дрібниці
+- Новий розробник не знає всіх конвенцій проекту
+- Типові зауваження повторюються з MR в MR
+
+</v-clicks>
+
+</div>
+
+<div>
+
+### Що дає AI-рев'ю
+
+<v-clicks>
+
+- Миттєвий фідбек — коментар в MR за ~30 секунд
+- Знає архітектуру проекту через `CLAUDE.md`
+- Не втомлюється, однаково уважний до кожного MR
+- Людина фокусується на складній логіці, не на стилі
+
+</v-clicks>
+
+<div v-click class="mt-4 p-3 bg-blue-500 bg-opacity-10 rounded-lg text-sm">
+
+💡 AI-рев'ю — не замінник людського, а перший рубіж. Людина підтверджує або відхиляє.
+
+</div>
+
+</div>
+
+</div>
+
+---
+
+# Як це працює: MR → Claude → коментар
+
+```mermaid
+graph LR
+    Dev["Розробник<br/>відкриває MR"] --> CI["GitLab CI<br/>тригер: manual"]
+    CI --> Script["bin/claude-mr-review<br/>shell script"]
+    Script --> Diff["git diff<br/>origin/main...HEAD"]
+    Diff --> Claude["claude -p '/review ...'<br/>claude-sonnet-4-6"]
+    Claude --> Comment["glab mr note<br/>коментар в MR"]
+    Comment --> Dev2["Розробник<br/>читає фідбек"]
+```
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div>
+
+**Ключові компоненти**
+
+<v-clicks>
+
+- **`.gitlab-ci.yml`** — job `claude-mr-review`, запускається вручну на MR
+- **`bin/claude-mr-review`** — shell-скрипт, серце автоматизації
+- **`CLAUDE.md`** — контекст проекту, який Claude читає перед рев'ю
+- **`glab`** — GitLab CLI для публікації коментаря в MR
+
+</v-clicks>
+
+</div>
+
+<div>
+
+```yaml
+claude-mr-review:
+  stage: review
+  image: node:22
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+      allow_failure: true
+  variables:
+    GIT_DEPTH: 0
+```
+
+<div v-click class="mt-2 text-xs opacity-60">
+
+`GIT_DEPTH: 0` — обов'язково, shallow clone зламає git diff
+
+</div>
+
+</div>
+
+</div>
+
+---
+
+# Реалізація: три кроки скрипта
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+
+<div>
+
+```bash
+# 1. Отримуємо зміни MR
+git fetch origin "${TARGET_BRANCH}"
+CHANGED=$(git diff --name-only \
+  "origin/${TARGET_BRANCH}...HEAD")
+
+# 2. Claude читає diff і пише рев'ю
+claude -p "/review origin/${TARGET_BRANCH}...HEAD" \
+  --model claude-sonnet-4-6 \
+  --output-format text \
+  > "$REVIEW_FILE"
+
+# 3. Публікуємо коментар в MR
+glab mr note "${CI_MERGE_REQUEST_IID}" \
+  --message "## Claude Code Review\n${REVIEW}"
+```
+
+</div>
+
+<div>
+
+**Чому це працює**
+
+<v-clicks>
+
+- **`claude -p "/review ..."`** — Claude Code в headless-режимі, один запуск без інтерактиву
+- **`origin/main...HEAD`** — тільки зміни цього MR, не весь проект
+- **`CLAUDE.md` в репо** — Claude автоматично читає його: знає Symfony 7, API Platform, конвенції Entity, стиль тестів
+- Без `CLAUDE.md` — generic рев'ю; з ним — специфічне для проекту
+
+</v-clicks>
+
+<div v-click class="mt-4 p-3 bg-green-500 bg-opacity-10 rounded-lg text-sm">
+
+`CLAUDE.md` = контекст архітектури → рев'ю знає що шукати саме у вашому проекті
+
+</div>
+
+</div>
+
+</div>
+
+---
 layout: center
 ---
 
